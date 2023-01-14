@@ -4,6 +4,9 @@ const express = require('express');
 //importing json web token
 const jwt=require('jsonwebtoken');
 
+//importing cors
+const cors=require('cors')
+
 //creating an app using express
 const app=express();
 
@@ -12,6 +15,10 @@ const dataService=require('./services/dataService');
 
 //for JSON to JS conversion
 app.use(express.json());
+
+app.use(cors({
+    origins:'http://localhost:4200'
+}))
 
 //Creating a port number
 app.listen(3000,()=>{
@@ -35,35 +42,63 @@ const jwtRouterMiddleware=(req,res,next)=>{
 }
 
 app.post('/register',(req,res)=>{
-    const result=dataService.register(req.body.acno,req.body.username,req.body.password);
-    // if(result){
-    //     res.send('register successful');
-    //     console.log(req.body);
-    // }
-    // else{
-    //     res.send('register failed');
-    // }
-    res.status(result.statusCode).json(result);
+    dataService.register(req.body.acno,req.body.username,req.body.password).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+        }
+    )
+
+    // // if(result){
+    // //     res.send('register successful');
+    // //     console.log(req.body);
+    // // }
+    // // else{
+    // //     res.send('register failed');
+    // // }
+    // const result=dataService.register(req.body.acno,req.body.username,req.body.password);
+    // res.status(result.statusCode).json(result);
 });
 
 app.post('/login',(req,res)=>{
-    const result=dataService.login(req.body.acno,req.body.password);
-    res.status(result.statusCode).json(result);
+    dataService.login(req.body.acno,req.body.password).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+        }
+    )
+    // const result=dataService.login(req.body.acno,req.body.password);
+    // res.status(result.statusCode).json(result);
 });
 
 app.post('/deposit',jwtRouterMiddleware,(req,res)=>{
-    const result=dataService.deposit(req.body.acno,req.body.password,req.body.amount);
-    res.status(result.statusCode).json(result);
+    dataService.deposit(req.body.acno,req.body.password,req.body.amount).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+
+        }
+    )
+    // const result=dataService.deposit(req.body.acno,req.body.password,req.body.amount);
+    // res.status(result.statusCode).json(result);
+
 });
 
 app.post('/withdraw',jwtRouterMiddleware,(req,res)=>{
-    const result=dataService.withdraw(req.body.acno,req.body.password,req.body.amount);
-    res.status(result.statusCode).json(result);
+    dataService.withdraw(req.body.acno,req.body.password,req.body.amount).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+        }
+    )
+    // const result=dataService.withdraw(req.body.acno,req.body.password,req.body.amount);
+    // res.status(result.statusCode).json(result);
 });
 
 app.post('/transaction',jwtRouterMiddleware,(req,res)=>{
-    const result=dataService.getTransaction(req.body.acno);
-    res.json(result);
+    dataService.getTransaction(req.body.acno).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+        }
+    )
+    // const result=dataService.getTransaction(req.body.acno);
+    // res.status(result.statusCode).json(result);
 });
 
 
