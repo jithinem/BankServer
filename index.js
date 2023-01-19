@@ -34,11 +34,21 @@ app.listen(3000,()=>{
 
 //Router speific middleware
 const jwtRouterMiddleware=(req,res,next)=>{
-    console.log('Router specific middleware');
-    const token=req.body.token;
-    const data=jwt.verify(token,'superkey2023');
-    console.log(data);
-    next();
+    try{
+        console.log('Router specific middleware');
+        // const token=req.body.token;
+        const token=req.headers['x-access-token']
+        const data=jwt.verify(token,'superkey2023');
+        console.log(data);
+        next();    
+    }
+    catch{
+        res.status(422).json({  //unprocessable entity
+            statusCode:422,
+            status:false,
+            message:'Please login first'
+        })
+    }
 }
 
 app.post('/register',(req,res)=>{
