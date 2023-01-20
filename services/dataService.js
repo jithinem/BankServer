@@ -283,7 +283,27 @@ userDetails={
     // }
   }
 
-
+  //To delete account
+  const deleteAcc=(acno)=>{
+    return db.User.deleteOne({acno}).then(
+      user=>{
+        if(user){
+          return{
+            status:true,
+            statusCode:200,
+            message:"User deleted"
+          }
+        }
+        else{
+          return{
+            status:false,
+            statusCode:401,
+            message:"User not found"
+          }
+        }
+      }
+    )
+  }
 
 
   module.exports={
@@ -291,5 +311,6 @@ userDetails={
     login,
     deposit,
     withdraw,
-    getTransaction
+    getTransaction,
+    deleteAcc
   }

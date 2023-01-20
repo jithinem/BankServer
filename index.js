@@ -17,7 +17,7 @@ const dataService=require('./services/dataService');
 app.use(express.json());
 
 app.use(cors({
-    origins:'http://localhost:4200'
+    origins:['http://localhost:4200','http://192.168.1.5:8080']
 }))
 
 //Creating a port number
@@ -110,6 +110,14 @@ app.post('/transaction',jwtRouterMiddleware,(req,res)=>{
     // const result=dataService.getTransaction(req.body.acno);
     // res.status(result.statusCode).json(result);
 });
+
+app.delete('/deleteAcc/:acno',(req,res)=>{
+    dataService.deleteAcc(req.params.acno).then(
+        result=>{
+            res.status(result.statusCode).json(result);
+        }
+    )
+})
 
 
 
